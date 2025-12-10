@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 
 Route::get('/', function () {
     return redirect()->route('login.page');
@@ -35,11 +36,12 @@ Route::middleware('auth')->group(function () {
         })->name('admin.dashboard');
     });
 
-    // Customer Only
-    Route::middleware('role:customer')->group(function () {
-        Route::get('/customer/profile', function(){
-            return view('customer.profile');
-        })->name('customer.profile');
-    });
+  // Customer Only
+Route::middleware('role:customer')->group(function () {
+    Route::get('/customer/profile', [CustomerController::class, 'profile'])->name('customer.profile');
+    Route::post('/customer/profile/update', [CustomerController::class, 'updateProfile'])->name('customer.profile.update');
+    Route::post('/customer/password/update', [CustomerController::class, 'changePassword'])->name('customer.password.update');
+});
+
 
 });
